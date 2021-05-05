@@ -1,7 +1,6 @@
-import {TBaseThunk, TInferActions} from "./redux-store"
+import {TInferActions} from "./redux-store"
 
 
-const INITIALIZED_SUCCESS = 'app/INITIALIZED_SUCCESS'
 const SET_LOADING = 'app/SET_LOADING'
 
 
@@ -23,30 +22,28 @@ const appReducer = (state= initialState, action: TActions): TInitialState => {
             }
             default: return state
     }
-
 }
 
 // ACTIONS
 export const actions = {
-    initializedSuccess: (initialized: boolean) => ({type: INITIALIZED_SUCCESS, payload: {initialized}} as const),
     setAppLoading: (isLoading: boolean) => ({type: SET_LOADING, isLoading} as const),
 }
 
 // THUNKS
 export type TActions = TInferActions<typeof actions>
-type TThunk = TBaseThunk<TActions>
 
-export const setAppLoading = (loading: boolean): TThunk => async (dispatch) => {
-    dispatch(actions.setAppLoading(loading))
+export const withProcessVisualization = function (operation: any, dispatch: any) {
+    return async () => {
+        dispatch(actions.setAppLoading(true))
+        await operation()
+        dispatch(actions.setAppLoading(false))
+    }
 }
 
-export const initializeApp = (): TThunk => async (dispatch) => {
-    const token = localStorage.token
-    let promises = [Promise.resolve()]
-    if (token) {
-        promises = []
-    }
-    Promise.all(promises).finally( () => dispatch(actions.initializedSuccess(true)))
+// something kind of decorator for processes
+export const commonAsyncHandler = (operation: any, dispatch: any) => {
+    const visualized = withProcessVisualization(operation, dispatch)
+    return visualized()
 }
 
 export default appReducer

@@ -5,7 +5,7 @@ export const appUrls = {
     task_create: '/task/create',
 }
 
-export type appUrlsT = typeof appUrls
+export type TAppUrls = typeof appUrls
 
 
 

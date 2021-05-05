@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {Layout, Menu} from "antd"
 import {NavLink, useLocation} from 'react-router-dom'
-import {appUrls, appUrlsT} from "../../urls/urls";
+import {appUrls} from "../../urls/urls"
 const {Item} = Menu
 
 export const Header: React.FC = () => {
