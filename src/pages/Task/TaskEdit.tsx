@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Col, Divider, Form, Input, Row, Select} from "antd"
+import {Button, Col, Divider, Form, Input, message, Row, Select} from "antd"
 
 import {useDispatch, useSelector} from "react-redux"
 import {TTaskEdit} from "../../types/task-types"
@@ -16,10 +16,10 @@ const { Option } = Select
 
 export const TaskEdit: React.FC = () => {
     const dispatch = useDispatch()
+    const token = useSelector(SGetUserToken)
 
     const {taskId} = useParams<{ taskId: string }>()
     const task = useSelector((state: TAppState) => SGetTaskById(state, parseInt(taskId)))
-    const token = useSelector(SGetUserToken)
 
     const [form] = Form.useForm()
 
@@ -32,6 +32,7 @@ export const TaskEdit: React.FC = () => {
     }
     const onFinish = (values: TTaskEdit) => {
         dispatch(editTask(parseInt(taskId), values))
+        message.success('Success')
     }
 
     if (!token)
@@ -71,6 +72,18 @@ export const TaskEdit: React.FC = () => {
                                 {[0,1,10,11].map( (item, index) => <Option key={index} value={item}>{taskStatusDisplay(item)}</Option>)}
                             </Select>
                         </Form.Item>
+
+                        <Form.Item
+                            label="Token"
+                            name="token"
+                            hidden={true}
+                            rules={[{ required: true, message: 'Please authorize again!' }]}
+                            initialValue={token}
+                        >
+                            <Input />
+                        </Form.Item>
+
+
 
                         <Form.Item {...tailLayout}>
                             <Button type="primary" htmlType="submit">

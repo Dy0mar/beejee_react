@@ -52,6 +52,7 @@ export const getTaskList = (params: TTasks | null = null): TThunk => async (disp
         const {message} = data
 
         dispatch(actions.get_task_list(message.tasks, message.total_task_count))
+        return data
     }, dispatch)
 }
 

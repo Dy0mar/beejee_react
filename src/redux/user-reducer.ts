@@ -38,16 +38,16 @@ type TThunk = TBaseThunk<TActions | TActionsApp>
 
 
 export const login = (values: TUserLogin): TThunk => async (dispatch) => {
-    const data = await taskAPI.login(values)
 
-    if (data?.message?.token){
-        dispatch(actions.set_user_token(data.message.token))
-        dispatch(actions.set_username(values.username))
-    }
-    else {
-        dispatch(actionsApp.setAppMessage(data.message))
-        dispatch(actionsApp.setAppStatus(data.status))
-    }
+    await commonAsyncHandler(async () => {
+        const data = await taskAPI.login(values)
+        if (data?.message?.token){
+            dispatch(actions.set_user_token(data.message.token))
+            dispatch(actions.set_username(values.username))
+        }
+        return data
+    }, dispatch)
+
 }
 
 export const logout = (): TThunk => async (dispatch) => {

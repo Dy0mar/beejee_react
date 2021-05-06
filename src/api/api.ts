@@ -20,7 +20,7 @@ export enum ResultStatusEnum {
 
 export type TResultStatus = 'error' | 'ok'
 
-type TResponse<D = string, RS = TResultStatus> = {
+export type TResponse<D = string, RS = TResultStatus> = {
     message?: D
     status: RS
 }

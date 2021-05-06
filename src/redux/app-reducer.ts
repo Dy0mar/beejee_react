@@ -1,5 +1,5 @@
-import {TBaseThunk, TInferActions} from "./redux-store"
-import {TResultStatus} from "../api/api"
+import {TInferActions} from "./redux-store"
+import {ResultStatusEnum, TResponse, TResultStatus} from "../api/api"
 
 
 const SET_LOADING = 'app/SET_LOADING'
@@ -38,19 +38,6 @@ export const actions = {
 
 // THUNKS
 export type TActions = TInferActions<typeof actions>
-type TThunk = TBaseThunk<TActions>
-
-
-// set response data
-export const setAppStatus = (status: TResultStatus): TThunk => async (dispatch) => {
-    dispatch(actions.setAppStatus(status))
-}
-
-export const setAppMessage = (message: any): TThunk => async (dispatch) => {
-    if (!!message)
-        dispatch(actions.setAppMessage(message))
-}
-// end set response data
 
 
 // COMMON THUNKS
@@ -61,10 +48,24 @@ export const withProcessVisualization = function (operation: any, dispatch: any)
         dispatch(actions.setAppLoading(false))
     }
 }
+export const handleSetResultCode = function<T> (operation: any, dispatch: any) {
+    return async () => {
+        let result: TResponse<T> = await operation()
+
+        if (result?.status === ResultStatusEnum.error){
+            dispatch(actions.setAppStatus(result.status))
+            dispatch(actions.setAppMessage(result.message))
+        }
+        if (result?.status === ResultStatusEnum.ok){
+            dispatch(actions.setAppStatus(result.status))
+        }
+    }
+}
 
 // something kind of decorator for processes
 export const commonAsyncHandler = (operation: any, dispatch: any) => {
-    const visualized = withProcessVisualization(operation, dispatch)
+    const setResultCode = handleSetResultCode(operation, dispatch)
+    const visualized = withProcessVisualization(setResultCode, dispatch)
     return visualized()
 }
 // END COMMON THUNKS
