@@ -29,7 +29,7 @@ export const Header: React.FC = () => {
                 <Item key={appUrls.task_create}> <NavLink to={appUrls.task_create}>Create new task</NavLink></Item>
                 {
                     user?.token
-                        ? <Button key='logout' onClick={Logout} type="link">Logout</Button>
+                        ? <Item> <Button key='logout' onClick={Logout} type="link">Logout</Button></Item>
                         : <Item key={appUrls.login}><NavLink to={appUrls.login}>Login</NavLink> </Item>
                 }
 
