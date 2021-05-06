@@ -1,23 +1,16 @@
-import React, {useEffect, useState} from 'react'
-import {Alert, Button, Col, Divider, Form, Input, Row} from "antd"
+import React from 'react'
+import {Button, Col, Divider, Form, Input, Row} from "antd"
 import {useDispatch, useSelector} from "react-redux"
 import {SGetUser} from "../../selectors/user-selector"
 import {login} from "../../redux/user-reducer"
-import {SGetAppMessage, SGetAppStatus} from "../../selectors/app-selector"
-import {ResultStatusEnum} from "../../api/api"
 import {TUserLogin} from "../../types/username-types"
 import {Message} from "../../components/Common/Message/Message"
 
 export const Login: React.FC = () => {
-
     const dispatch = useDispatch()
 
-
     const user = useSelector(SGetUser)
-    const [token, setToken] = useState(user.token)
 
-    const status = useSelector(SGetAppStatus)
-    const message = useSelector(SGetAppMessage)
 
     const layout = {
         labelCol: { span: 8 },
@@ -29,14 +22,6 @@ export const Login: React.FC = () => {
     const onFinish = (values: TUserLogin) => {
         dispatch(login(values))
     }
-
-    const onFinishFailed = (errorInfo: any) => {
-        return JSON.stringify(errorInfo)
-    }
-
-    useEffect(() => {
-       setToken(user.token)
-    }, [user.token])
 
     if (user.token)
         return <Message message={'Hello ' + user.username} />
@@ -72,10 +57,6 @@ export const Login: React.FC = () => {
                                 Submit
                             </Button>
                         </Form.Item>
-                        <Form.Item {...tailLayout}>
-                            {status && status === ResultStatusEnum.error  ? <Alert message={onFinishFailed(message)} type="error" /> : ''}
-                        </Form.Item>
-
                     </Form>
                 </Col>
             </Row>

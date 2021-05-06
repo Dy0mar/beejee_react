@@ -15,6 +15,8 @@ import {TaskCreate} from "./pages/Task/Task"
 import {Page404} from "./pages/StatusPages/Page404/Page404"
 import {TaskEdit} from "./pages/Task/TaskEdit"
 import {initializeApp} from "./redux/app-reducer"
+import {compose} from "redux"
+import {showMessage} from "./hoc/showMessage"
 
 
 function App() {
@@ -24,7 +26,7 @@ function App() {
     const initApp = () => {
         dispatch(initializeApp())
     }
-    useEffect(initApp, [])
+    useEffect(initApp, [dispatch])
 
     return (
         <Layout className="layout">
@@ -49,11 +51,13 @@ function App() {
     )
 }
 
+const AppContainer = compose(showMessage)(App)
+
 const MainApp = () => {
     return (
         <BrowserRouter basename={process.env.PUBLIC_URL} >
             <Provider store={store} >
-                <App />
+                <AppContainer />
             </Provider>
         </BrowserRouter>
     )

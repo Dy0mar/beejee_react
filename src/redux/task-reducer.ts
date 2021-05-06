@@ -1,8 +1,9 @@
 import {TBaseThunk, TInferActions} from "./redux-store"
-import {taskAPI} from "../api/api"
-import {commonAsyncHandler} from "./app-reducer"
+import {ResultStatusEnum, taskAPI} from "../api/api"
+import {addSuccessMessage, commonAsyncHandler} from "./app-reducer"
 import {NullOrNumber, NullOrString} from "../types/g-types"
 import {TTaskCreate, TTaskEdit, TTasks} from "../types/task-types"
+import {TActions as TActionsApp} from './app-reducer'
 
 const GET_TASK_LIST = 'task/GET_TASK_LIST'
 
@@ -37,14 +38,14 @@ const taskReducer = (state= initialState, action: TActions): TInitialState => {
 // ACTIONS
 export const actions = {
     get_task_list: (tasks: TTask[] | undefined, total_task_count: string ) => ({
-        type: GET_TASK_LIST,
-        payload: {tasks, total_task_count}} as const
+            type: GET_TASK_LIST,
+            payload: {tasks, total_task_count}} as const
     ),
 }
 
 // THUNKS
 export type TActions = TInferActions<typeof actions>
-type TThunk = TBaseThunk<TActions>
+type TThunk = TBaseThunk<TActions | TActionsApp>
 
 export const getTaskList = (params: TTasks | null = null): TThunk => async (dispatch) => {
     await commonAsyncHandler(async () => {
@@ -57,12 +58,20 @@ export const getTaskList = (params: TTasks | null = null): TThunk => async (disp
 }
 
 export const createTask = (values: TTaskCreate): TThunk => async (dispatch) => {
-    await taskAPI.create_new_task(values)
-    await dispatch(getTaskList())
+    await commonAsyncHandler(async () => {
+        const data = await taskAPI.create_new_task(values)
+        if (data.status === ResultStatusEnum.ok)
+            await dispatch(addSuccessMessage('Task created!'))
+        await dispatch(getTaskList())
+        return data
+    }, dispatch)
 }
 
 export const editTask = (edit_task: number, values: TTaskEdit): TThunk => async (dispatch) => {
-    await taskAPI.edit_task(edit_task, values)
+    await commonAsyncHandler(async () => {
+        const data = await taskAPI.edit_task(edit_task, values)
+        return data
+    }, dispatch)
 }
 
 

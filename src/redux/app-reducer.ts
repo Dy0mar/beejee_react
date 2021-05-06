@@ -1,16 +1,21 @@
 import {TBaseThunk, TInferActions} from "./redux-store"
 import {ResultStatusEnum, TResponse, TResultStatus} from "../api/api"
 import {TActions as TActionsUser, actions as actionsUser} from './user-reducer'
+import {TMessage} from "../types/g-types";
+import {newMessage} from "../selectors/app-selector";
 
 
 const SET_LOADING = 'app/SET_LOADING'
 const SET_STATUS = 'app/SET_STATUS'
 const SET_MESSAGE = 'app/SET_MESSAGE'
+const SHOW_MESSAGE = 'app/SHOW_MESSAGE'
+const ADD_MESSAGE = 'app/ADD_MESSAGE'
 
 const initialState = {
     isLoading: false,
     status: null as TResultStatus | null,
-    message: null as any
+    message: null as any,
+    messages: [] as Array<TMessage>,
 }
 
 
@@ -26,7 +31,18 @@ const appReducer = (state= initialState, action: TActions): TInitialState => {
                 ...state,
                 ...action.payload,
             }
-            default: return state
+        case SHOW_MESSAGE:
+            return {
+                ...state,
+                messages: state.messages.filter(m => m.id !== action.msg.id)
+            }
+        case ADD_MESSAGE:
+            return {
+                ...state,
+                messages: [...state.messages, action.msg]
+            }
+        default: return state
+
     }
 }
 
@@ -35,6 +51,8 @@ export const actions = {
     setAppLoading: (isLoading: boolean) => ({type: SET_LOADING, payload: {isLoading}} as const),
     setAppStatus: (status: TResultStatus) => ({type: SET_STATUS, payload:{status}} as const),
     setAppMessage: (message: any) => ({type: SET_MESSAGE, payload:{message}} as const),
+    showMessageAction: (msg: TMessage) => ({type: SHOW_MESSAGE, msg} as const),
+    addMessageAction: (msg: TMessage) => ({type: ADD_MESSAGE, msg} as const),
 }
 
 // THUNKS
@@ -51,11 +69,12 @@ export const withProcessVisualization = function (operation: any, dispatch: any)
 }
 export const handleSetResultCode = function<T> (operation: any, dispatch: any) {
     return async () => {
-        let result: TResponse<T> = await operation()
+        const result: TResponse<T> = await operation()
 
         if (result?.status === ResultStatusEnum.error){
             dispatch(actions.setAppStatus(result.status))
             dispatch(actions.setAppMessage(result.message))
+            dispatch(addErrorMessage(JSON.stringify(result.message)))
         }
         if (result?.status === ResultStatusEnum.ok){
             dispatch(actions.setAppStatus(result.status))
@@ -70,6 +89,20 @@ export const commonAsyncHandler = (operation: any, dispatch: any) => {
     return visualized()
 }
 // END COMMON THUNKS
+
+export const addSuccessMessage = (msg: string): TThunk => async (dispatch, getState) => {
+    const message = newMessage(getState(), 'success', msg)
+    dispatch(actions.addMessageAction(message))
+}
+
+export const addErrorMessage = (msg: string): TThunk => async (dispatch, getState) => {
+    const message = newMessage(getState(), 'error', msg)
+    dispatch(actions.addMessageAction(message))
+}
+
+export const showedMessage = (message: TMessage): TThunk => async (dispatch) => {
+    dispatch(actions.showMessageAction(message))
+}
 
 export const initializeApp = (): TThunk => async (dispatch) => {
     const token = localStorage.token

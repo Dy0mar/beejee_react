@@ -7,3 +7,11 @@ export type TSorterFromTableAntd = SorterResult<any> | SorterResult<any>[]
 export type NullOrString = string | null
 export type NullOrNumber = null | number
 
+
+export type TMessageTypes = 'success' | 'error'
+
+export type TMessage = {
+    id: number,
+    type: TMessageTypes,
+    message: string
+}

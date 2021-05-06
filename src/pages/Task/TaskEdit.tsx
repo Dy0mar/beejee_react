@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Col, Divider, Form, Input, message, Row, Select} from "antd"
+import {Button, Col, Divider, Form, Input, Row, Select} from "antd"
 
 import {useDispatch, useSelector} from "react-redux"
 import {TTaskEdit} from "../../types/task-types"
@@ -32,7 +32,6 @@ export const TaskEdit: React.FC = () => {
     }
     const onFinish = (values: TTaskEdit) => {
         dispatch(editTask(parseInt(taskId), values))
-        message.success('Success')
     }
 
     if (!token)
