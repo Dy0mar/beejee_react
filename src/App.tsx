@@ -11,7 +11,7 @@ import style from './App.module.css'
 import {Login} from "./pages/Login/Login"
 import {appUrls} from "./urls/urls"
 import {Tasks} from "./pages/Tasks/Tasks"
-import {Task} from "./pages/Task/Task"
+import {TaskCreate} from "./pages/Task/Task"
 import {Page404} from "./pages/StatusPages/Page404/Page404"
 import {HomePage} from "./pages/HomePage/HomePage"
 
@@ -26,7 +26,7 @@ function App() {
                     <Switch>
                         <Route path={appUrls.login}  render={() => <Login />}/>
                         <Route path={appUrls.tasks} render={() => <Tasks />}/>
-                        <Route path={appUrls.task_create} render={() => <Task />}/>
+                        <Route path={appUrls.task_create} render={() => <TaskCreate />}/>
                         <Route path={appUrls.index} render={() => <HomePage />} />
 
                         <Redirect exact from="/" to={appUrls.index} />

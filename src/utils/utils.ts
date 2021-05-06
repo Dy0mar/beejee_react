@@ -17,3 +17,11 @@ export const taskStatusDisplay = (status: TStatus) => {
 // ascend and descend to asc, desc
 export const makeShortAntdSortOrderName = (order: 'descend' | 'ascend' | null) => order ? order.replace('end', ''):  null
 
+
+export function makeBodyFormData<Type> (obj: Type) {
+    const formData = new FormData()
+    for (let [paramName, paramValue] of Object.entries(obj)) {
+        formData.set(paramName, paramValue)
+    }
+    return formData
+}

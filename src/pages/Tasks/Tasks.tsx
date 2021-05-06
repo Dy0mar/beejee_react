@@ -11,6 +11,7 @@ import {
     taskStatusDisplay
 } from "../../utils/utils"
 import {TFiltersFromTableAntd, TSorterFromTableAntd} from "../../types/g-types"
+import {TTasks} from "../../types/task-types"
 
 
 export const Tasks: React.FC = () => {
@@ -68,14 +69,22 @@ export const Tasks: React.FC = () => {
     }, [total_task_count, isLoading, tasks])
 
     const handleTableChange = (pagination: TablePaginationConfig, filter: TFiltersFromTableAntd, sorter: TSorterFromTableAntd ) => {
+        const params: TTasks = {
+            page: pagination.current ? pagination.current : 1
+        }
 
         // if remove sort then order will be undefined
         if (!Array.isArray(sorter) && sorter.order !== undefined && sorter.field !== undefined){
-            const field = sorter.field ? sorter.field.toString() : null
-            const order = makeShortAntdSortOrderName(sorter.order)
+            const sort_field = sorter.field ? sorter.field.toString() : null
+            if (sort_field)
+                params.sort_field = sort_field
 
-            dispatch(getTaskList(pagination.current, field, order))
+            const sort_direction = makeShortAntdSortOrderName(sorter.order)
+            if (sort_direction)
+                params.sort_direction = sort_direction
         }
+
+        dispatch(getTaskList(params))
     }
 
     return (

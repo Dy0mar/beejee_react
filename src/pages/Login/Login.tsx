@@ -5,7 +5,8 @@ import {SGetUser} from "../../selectors/user-selector"
 import {NullOrString} from "../../types/g-types"
 import {login} from "../../redux/user-reducer"
 import {SGetAppMessage, SGetAppStatus} from "../../selectors/app-selector"
-import {ResultStatusEnum} from "../../api/api";
+import {ResultStatusEnum} from "../../api/api"
+import {TUserLogin} from "../../types/username-types"
 
 const { Text, Title } = Typography
 
@@ -24,8 +25,8 @@ export const Login: React.FC = () => {
     const tailLayout = {
         wrapperCol: { offset: 8, span: 16 },
     }
-    const onFinish = (values: {username: string, password: string}) => {
-        dispatch(login(values.username, values.password))
+    const onFinish = (values: TUserLogin) => {
+        dispatch(login(values))
     }
 
     const onFinishFailed = (errorInfo: any) => {
@@ -39,7 +40,7 @@ export const Login: React.FC = () => {
         <div>
             <Divider>Login </Divider>
             <Row style={{textAlign: 'center'}}>
-                <Col offset={8} span={6}>
+                <Col key={1} offset={8} span={6}>
                     <Form
                         {...layout}
                         name="basic"
@@ -79,7 +80,7 @@ export const Login: React.FC = () => {
 const LoginFormText: React.FC<{username: NullOrString}> = (props) => {
     return(
         <Row style={{textAlign: 'center', }}>
-            <Col offset={8} span={6}>
+            <Col key={2} offset={8} span={6}>
                 <Text type="secondary"><Title level={2}>Hello {props.username}</Title></Text>
             </Col>
         </Row>

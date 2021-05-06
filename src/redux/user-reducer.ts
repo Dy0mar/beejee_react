@@ -3,6 +3,7 @@ import {taskAPI} from "../api/api"
 import {commonAsyncHandler} from "./app-reducer"
 import {NullOrString} from "../types/g-types"
 import {TActions as TActionsApp, actions as actionsApp} from './app-reducer'
+import {TUserLogin} from "../types/username-types"
 
 const SET_USER_TOKEN = 'user/SET_USER_TOKEN'
 
@@ -36,12 +37,12 @@ export type TActions = TInferActions<typeof actions>
 type TThunk = TBaseThunk<TActions | TActionsApp>
 
 
-export const login = (username: string, password: string): TThunk => async (dispatch) => {
-    const data = await taskAPI.login(username, password)
+export const login = (values: TUserLogin): TThunk => async (dispatch) => {
+    const data = await taskAPI.login(values)
 
     if (data?.message?.token){
         dispatch(actions.set_user_token(data.message.token))
-        dispatch(actions.set_username(username))
+        dispatch(actions.set_username(values.username))
     }
     else {
         dispatch(actionsApp.setAppMessage(data.message))
@@ -53,6 +54,10 @@ export const logout = (): TThunk => async (dispatch) => {
     await commonAsyncHandler(async () => {
         dispatch(actions.set_user_token(null))
         dispatch(actions.set_username(null))
+
+        // it's not api request so clear set here
+        dispatch(actionsApp.setAppMessage(''))
+        dispatch(actionsApp.setAppStatus('ok'))
     }, dispatch)
 }
 

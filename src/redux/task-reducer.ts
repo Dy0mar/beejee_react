@@ -1,26 +1,24 @@
 import {TBaseThunk, TInferActions} from "./redux-store"
-import {taskAPI, TResultStatus} from "../api/api"
+import {taskAPI} from "../api/api"
 import {commonAsyncHandler} from "./app-reducer"
+import {NullOrNumber, NullOrString} from "../types/g-types"
+import {TTaskCreate, TTasks} from "../types/task-types"
 
 const GET_TASK_LIST = 'task/GET_TASK_LIST'
 
 export type TStatus = null | number
 
 export type TTask = {
-    id: null | number,
-    username: null | string,
-    email: null | string,
-    text: null | string,
+    id: NullOrNumber,
+    username: NullOrString,
+    email: NullOrString,
+    text: NullOrString,
     status: TStatus,
 }
 
-export type TMessage = {
-    tasks: null | TTask[]
-    total_task_count: string
-}
-
 const initialState = {
-    message: {} as TMessage | undefined
+    tasks: [] as TTask[] | undefined,
+    total_task_count: ''
 }
 
 type TInitialState = typeof initialState
@@ -38,19 +36,27 @@ const taskReducer = (state= initialState, action: TActions): TInitialState => {
 
 // ACTIONS
 export const actions = {
-    get_task_list: (status: TResultStatus, message: TMessage | undefined ) => ({type: GET_TASK_LIST, payload: {status, message}} as const),
+    get_task_list: (tasks: TTask[] | undefined, total_task_count: string ) => ({
+        type: GET_TASK_LIST,
+        payload: {tasks, total_task_count}} as const
+    ),
 }
 
 // THUNKS
 export type TActions = TInferActions<typeof actions>
 type TThunk = TBaseThunk<TActions>
 
-export const getTaskList = (page= 1, field: null| string = '', order: null | string = null): TThunk => async (dispatch) => {
+export const getTaskList = (params: TTasks | null = null): TThunk => async (dispatch) => {
     await commonAsyncHandler(async () => {
-        const data = await taskAPI.get_task_list(page, field, order)
-        const {status, message} = data
-        dispatch(actions.get_task_list(status, message))
+        const data = await taskAPI.get_task_list(params)
+        const {message} = data
+
+        dispatch(actions.get_task_list(message.tasks, message.total_task_count))
     }, dispatch)
+}
+
+export const createTask = (values: TTaskCreate): TThunk => async (dispatch) => {
+    await taskAPI.create_new_task(values)
 }
 
 export default taskReducer

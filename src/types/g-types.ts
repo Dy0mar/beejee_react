@@ -1,3 +1,4 @@
+// Global common types here
 import {FilterValue, SorterResult} from "antd/lib/table/interface"
 
 export type TFiltersFromTableAntd = Record<string, FilterValue | null>
