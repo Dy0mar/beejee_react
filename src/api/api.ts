@@ -1,7 +1,7 @@
 import axios from "axios"
 import {TTask} from "../redux/task-reducer"
-import {TTaskCreate, TTasks} from "../types/task-types"
-import {makeBodyFormData} from "../utils/utils"
+import {TTaskCreate, TTaskEdit, TTasks} from "../types/task-types"
+import {makeFormData} from "../utils/utils"
 import {TUserLogin} from "../types/username-types"
 
 const url = 'https://uxcandy.com/~shapoval/test-task-backend/v2/'
@@ -45,7 +45,7 @@ type TMessageTaskError = {
 }
 
 const headers = {
-  'Content-Type': 'multipart/form-data'
+    'Content-Type': 'multipart/form-data'
 }
 
 export const taskAPI = {
@@ -55,14 +55,20 @@ export const taskAPI = {
     },
 
     login(data: TUserLogin) {
-        const bodyFormData = makeBodyFormData({data})
-        return instance.post<TResponse<TMessageLoginSuccess | TMessageLoginError>>('login/', bodyFormData, {headers})
+        const formData = makeFormData(data)
+        return instance.post<TResponse<TMessageLoginSuccess | TMessageLoginError>>('login/', formData, {headers})
             .then(r => r.data)
             .catch(e => e.response.data)
     },
     create_new_task(data: TTaskCreate){
-        const bodyFormData = makeBodyFormData(data)
-        return instance.post<TResponse<TTask | TMessageTaskError>>('create/', bodyFormData, {headers})
+        const formData = makeFormData(data)
+        return instance.post<TResponse<TTask | TMessageTaskError>>('create/', formData, {headers})
+            .then(r => r.data)
+            .catch(e => e.response.data)
+    },
+    edit_task(taskId: number, data: TTaskEdit){
+        const formData = makeFormData(data)
+        return instance.post<TResponse<TTask | TMessageTaskError>>('edit/'+taskId, formData, {headers})
             .then(r => r.data)
             .catch(e => e.response.data)
     }

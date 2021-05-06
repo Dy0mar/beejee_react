@@ -14,6 +14,7 @@ import {Tasks} from "./pages/Tasks/Tasks"
 import {TaskCreate} from "./pages/Task/Task"
 import {Page404} from "./pages/StatusPages/Page404/Page404"
 import {HomePage} from "./pages/HomePage/HomePage"
+import {TaskEdit} from "./pages/Task/TaskEdit"
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
                         <Route path={appUrls.login}  render={() => <Login />}/>
                         <Route path={appUrls.tasks} render={() => <Tasks />}/>
                         <Route path={appUrls.task_create} render={() => <TaskCreate />}/>
+                        <Route path={appUrls.task_edit+':taskId(\\d+)'} render={() => <TaskEdit />}/>
                         <Route path={appUrls.index} render={() => <HomePage />} />
 
                         <Redirect exact from="/" to={appUrls.index} />

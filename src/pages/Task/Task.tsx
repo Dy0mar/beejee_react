@@ -60,14 +60,12 @@ export const TaskCreate: React.FC = () => {
 
                         <Form.Item {...tailLayout}>
                             <Button type="primary" htmlType="submit">
-                                Submit
+                                Create
                             </Button>
                         </Form.Item>
                     </Form>
                 </Col>
-
             </Row>
-
         </div>
     )
 }

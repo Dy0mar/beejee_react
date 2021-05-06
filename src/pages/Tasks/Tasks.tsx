@@ -63,6 +63,10 @@ export const Tasks: React.FC = () => {
                     sorter: true,
                     render: (row: TStatus) => taskStatusDisplay(row)
                 },
+                {
+                    ...getColumn('Action'),
+                    render: (_: undefined, row: TTask) => <NavLink to={appUrls.task_edit + row.id} >Edit</NavLink>
+                }
             ]
         })
 

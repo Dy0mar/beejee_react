@@ -1,14 +1,12 @@
 import React from 'react'
-import {Alert, Button, Col, Divider, Form, Input, Row, Typography} from "antd"
+import {Alert, Button, Col, Divider, Form, Input, Row} from "antd"
 import {useDispatch, useSelector} from "react-redux"
 import {SGetUser} from "../../selectors/user-selector"
-import {NullOrString} from "../../types/g-types"
 import {login} from "../../redux/user-reducer"
 import {SGetAppMessage, SGetAppStatus} from "../../selectors/app-selector"
 import {ResultStatusEnum} from "../../api/api"
 import {TUserLogin} from "../../types/username-types"
-
-const { Text, Title } = Typography
+import {Message} from "../../components/Common/Message/Message"
 
 export const Login: React.FC = () => {
 
@@ -34,7 +32,7 @@ export const Login: React.FC = () => {
     }
 
     if (user.token)
-        return <LoginFormText username={user.username} />
+        return <Message message={'Hello, ' + user.username} />
 
     return (
         <div>
@@ -76,14 +74,4 @@ export const Login: React.FC = () => {
             </Row>
         </div>
     )
-}
-const LoginFormText: React.FC<{username: NullOrString}> = (props) => {
-    return(
-        <Row style={{textAlign: 'center', }}>
-            <Col key={2} offset={8} span={6}>
-                <Text type="secondary"><Title level={2}>Hello {props.username}</Title></Text>
-            </Col>
-        </Row>
-    )
-
 }

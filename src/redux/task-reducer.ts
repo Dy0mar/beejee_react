@@ -2,7 +2,7 @@ import {TBaseThunk, TInferActions} from "./redux-store"
 import {taskAPI} from "../api/api"
 import {commonAsyncHandler} from "./app-reducer"
 import {NullOrNumber, NullOrString} from "../types/g-types"
-import {TTaskCreate, TTasks} from "../types/task-types"
+import {TTaskCreate, TTaskEdit, TTasks} from "../types/task-types"
 
 const GET_TASK_LIST = 'task/GET_TASK_LIST'
 
@@ -58,5 +58,11 @@ export const getTaskList = (params: TTasks | null = null): TThunk => async (disp
 export const createTask = (values: TTaskCreate): TThunk => async (dispatch) => {
     await taskAPI.create_new_task(values)
 }
+
+export const editTask = (edit_task: number, values: TTaskEdit): TThunk => async (dispatch) => {
+    await taskAPI.edit_task(edit_task, values)
+}
+
+
 
 export default taskReducer
