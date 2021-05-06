@@ -9,7 +9,7 @@ const url = 'https://uxcandy.com/~shapoval/test-task-backend/v2/'
 const instance = axios.create({
     baseURL: url,
     params: {
-        developer: 'Name'
+        developer: 'dy0mar'
     }
 })
 
