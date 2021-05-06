@@ -11,20 +11,25 @@ const instance = axios.create({
 })
 
 export enum ResultStatusEnum {
-    'error',
-    'ok',
+    error = 'error',
+    ok = 'ok'
 }
 
-export type TResultStatus = typeof ResultStatusEnum
+// export type TResultStatus = typeof ResultStatusEnum
+export type TResultStatus = 'error' | 'ok'
 
 export type TResponse<D = string, RS = TResultStatus> = {
     message?: D
     status: RS
 }
 
+const headers = {
+  'Content-Type': 'multipart/form-data'
+}
+
 export const taskAPI = {
     get_task_list(page: number, field: null | string, order: null | string){
-        return instance.get<TResponse<TMessage>>('/', {
+        return instance.get<TResponse<TMessage | any>>('/', {
             params: {
                 page: page,
                 sort_field: field,
@@ -32,18 +37,13 @@ export const taskAPI = {
             }
         }).then(r => r.data)
     },
-    verify(token: string) {
-        return instance.post('api-token-verify/', {'token': token})
-            .then(r => r.data)
-            .catch(e => e.response.data)
-    },
-
     login(username: string, password: string) {
-        return instance.post('auth/login/', {username, password})
+        const bodyFormData = new FormData()
+        bodyFormData.set('username', username)
+        bodyFormData.set('password', password)
+
+        return instance.post('login/', bodyFormData, {headers})
             .then(r => r.data)
             .catch(e => e.response.data)
-    },
-    logout() {
-        return instance.post('auth/logout/')
     },
 }

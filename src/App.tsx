@@ -2,7 +2,7 @@ import React from 'react'
 import "antd/dist/antd.css"
 import {Layout} from 'antd'
 import store from "./redux/redux-store"
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 import {Provider} from "react-redux"
 import {Header} from "./components/Header/Header"
 import {Content} from "antd/es/layout/layout"
@@ -12,7 +12,8 @@ import {Login} from "./pages/Login/Login"
 import {appUrls} from "./urls/urls"
 import {Tasks} from "./pages/Tasks/Tasks"
 import {Task} from "./pages/Task/Task"
-
+import {Page404} from "./pages/StatusPages/Page404/Page404"
+import {HomePage} from "./pages/HomePage/HomePage"
 
 
 function App() {
@@ -26,7 +27,12 @@ function App() {
                         <Route path={appUrls.login}  render={() => <Login />}/>
                         <Route path={appUrls.tasks} render={() => <Tasks />}/>
                         <Route path={appUrls.task_create} render={() => <Task />}/>
+                        <Route path={appUrls.index} render={() => <HomePage />} />
 
+                        <Redirect exact from="/" to={appUrls.index} />
+
+
+                        <Route path='**' render={() => <Page404 />} />
                     </Switch>
                 </div>
             </Content>

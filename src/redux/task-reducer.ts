@@ -1,5 +1,5 @@
 import {TBaseThunk, TInferActions} from "./redux-store"
-import {ResultStatusEnum, taskAPI, TResultStatus} from "../api/api"
+import {taskAPI, TResultStatus} from "../api/api"
 import {commonAsyncHandler} from "./app-reducer"
 
 const GET_TASK_LIST = 'task/GET_TASK_LIST'
@@ -20,7 +20,6 @@ export type TMessage = {
 }
 
 const initialState = {
-    status: ResultStatusEnum,
     message: {} as TMessage | undefined
 }
 
@@ -46,14 +45,12 @@ export const actions = {
 export type TActions = TInferActions<typeof actions>
 type TThunk = TBaseThunk<TActions>
 
-// null| string = null
 export const getTaskList = (page= 1, field: null| string = '', order: null | string = null): TThunk => async (dispatch) => {
     await commonAsyncHandler(async () => {
         const data = await taskAPI.get_task_list(page, field, order)
         const {status, message} = data
         dispatch(actions.get_task_list(status, message))
     }, dispatch)
-
 }
 
 export default taskReducer
