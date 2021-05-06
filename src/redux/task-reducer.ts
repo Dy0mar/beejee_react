@@ -58,6 +58,7 @@ export const getTaskList = (params: TTasks | null = null): TThunk => async (disp
 
 export const createTask = (values: TTaskCreate): TThunk => async (dispatch) => {
     await taskAPI.create_new_task(values)
+    await dispatch(getTaskList())
 }
 
 export const editTask = (edit_task: number, values: TTaskEdit): TThunk => async (dispatch) => {
