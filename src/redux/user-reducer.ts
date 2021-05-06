@@ -42,6 +42,9 @@ export const login = (values: TUserLogin): TThunk => async (dispatch) => {
     await commonAsyncHandler(async () => {
         const data = await taskAPI.login(values)
         if (data?.message?.token){
+            localStorage.setItem("token", data.message.token)
+            localStorage.setItem("username", data.message.token)
+
             dispatch(actions.set_user_token(data.message.token))
             dispatch(actions.set_username(values.username))
         }
@@ -52,6 +55,9 @@ export const login = (values: TUserLogin): TThunk => async (dispatch) => {
 
 export const logout = (): TThunk => async (dispatch) => {
     await commonAsyncHandler(async () => {
+        localStorage.removeItem("token")
+        localStorage.removeItem("username")
+
         dispatch(actions.set_user_token(null))
         dispatch(actions.set_username(null))
 

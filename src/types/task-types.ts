@@ -8,6 +8,7 @@ export type TTaskCreate = {
 export type TTaskEdit = {
     text: string,
     status: number
+    token?: string
 }
 
 export type TTasks = {

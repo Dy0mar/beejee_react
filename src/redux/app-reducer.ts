@@ -1,5 +1,6 @@
-import {TInferActions} from "./redux-store"
+import {TBaseThunk, TInferActions} from "./redux-store"
 import {ResultStatusEnum, TResponse, TResultStatus} from "../api/api"
+import {TActions as TActionsUser, actions as actionsUser} from './user-reducer'
 
 
 const SET_LOADING = 'app/SET_LOADING'
@@ -38,7 +39,7 @@ export const actions = {
 
 // THUNKS
 export type TActions = TInferActions<typeof actions>
-
+type TThunk = TBaseThunk<TActions | TActionsUser>
 
 // COMMON THUNKS
 export const withProcessVisualization = function (operation: any, dispatch: any) {
@@ -70,6 +71,20 @@ export const commonAsyncHandler = (operation: any, dispatch: any) => {
 }
 // END COMMON THUNKS
 
+export const initializeApp = (): TThunk => async (dispatch) => {
+    const token = localStorage.token
+    const username = localStorage.username
 
+    let promises = [Promise.resolve()]
+
+    // init data set here
+    if (token) {
+        promises = []
+    }
+    Promise.all(promises).finally( () => {
+        dispatch(actionsUser.set_user_token(token))
+        dispatch(actionsUser.set_user_token(username))
+    })
+}
 
 export default appReducer

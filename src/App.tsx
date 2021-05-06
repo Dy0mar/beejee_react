@@ -1,9 +1,9 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import "antd/dist/antd.css"
 import {Layout} from 'antd'
 import store from "./redux/redux-store"
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
-import {Provider} from "react-redux"
+import {Provider, useDispatch} from "react-redux"
 import {Header} from "./components/Header/Header"
 import {Content} from "antd/es/layout/layout"
 import {Footer} from "./components/Footer/Footer"
@@ -14,9 +14,17 @@ import {Tasks} from "./pages/Tasks/Tasks"
 import {TaskCreate} from "./pages/Task/Task"
 import {Page404} from "./pages/StatusPages/Page404/Page404"
 import {TaskEdit} from "./pages/Task/TaskEdit"
+import {initializeApp} from "./redux/app-reducer"
 
 
 function App() {
+
+    const dispatch = useDispatch()
+
+    const initApp = () => {
+        dispatch(initializeApp())
+    }
+    useEffect(initApp, [])
 
     return (
         <Layout className="layout">

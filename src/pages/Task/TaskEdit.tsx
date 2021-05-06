@@ -73,15 +73,7 @@ export const TaskEdit: React.FC = () => {
                             </Select>
                         </Form.Item>
 
-                        <Form.Item
-                            label="Token"
-                            name="token"
-                            hidden={true}
-                            rules={[{ required: true, message: 'Please authorize again!' }]}
-                            initialValue={token}
-                        >
-                            <Input />
-                        </Form.Item>
+
 
 
 

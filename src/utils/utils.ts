@@ -23,5 +23,7 @@ export function makeFormData<Type> (obj: Type) {
     for (let [paramName, paramValue] of Object.entries(obj)) {
         formData.append(paramName, paramValue)
     }
+    if (localStorage.token)
+        formData.append('token', localStorage.token)
     return formData
 }

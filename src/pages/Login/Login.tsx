@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {Alert, Button, Col, Divider, Form, Input, Row} from "antd"
 import {useDispatch, useSelector} from "react-redux"
 import {SGetUser} from "../../selectors/user-selector"
@@ -12,7 +12,10 @@ export const Login: React.FC = () => {
 
     const dispatch = useDispatch()
 
+
     const user = useSelector(SGetUser)
+    const [token, setToken] = useState(user.token)
+
     const status = useSelector(SGetAppStatus)
     const message = useSelector(SGetAppMessage)
 
@@ -31,8 +34,12 @@ export const Login: React.FC = () => {
         return JSON.stringify(errorInfo)
     }
 
+    useEffect(() => {
+       setToken(user.token)
+    }, [user.token])
+
     if (user.token)
-        return <Message message={'Hello, ' + user.username} />
+        return <Message message={'Hello ' + user.username} />
 
     return (
         <div>
